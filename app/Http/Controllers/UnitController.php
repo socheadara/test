@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 class UnitController extends Controller
 {
     /**
@@ -15,10 +15,11 @@ class UnitController extends Controller
     public function index()
     {
         $units = DB::table('units')
-            ->where('active', 1)
-            ->orderBy('id', 'desc')
-            ->paginate(config('app.row'));
-        return view('units.index', compact('units'));
+                ->where('active',1)
+                ->orderBy('id','desc')
+                ->paginate(config('app.row'));
+        return view('units.index',compact('units'));
+
     }
 
     /**
@@ -43,16 +44,13 @@ class UnitController extends Controller
             ->insert($request->except('_token'));
         if($i)
         {
-            Session::flash('success', 'Data has been saved!');
-            return redirect('unit/create');
+            return redirect('unit/create')->with('success','Data has been saved!');
         }
-        else{
-            Session::flash('error', 'Fail to save data!');
-            return redirect('unit/create')->withInput();
+        else
+        {
+            return redirect('unit/create')->with('error','Fail to saved data!')->withInput();
         }
     }
-
-   
 
     /**
      * Show the form for editing the specified resource.
@@ -63,7 +61,7 @@ class UnitController extends Controller
     public function edit($id)
     {
         $data['unit'] = DB::table('units')->find($id);
-        return view('units.edit', $data);
+        return view('units.edit',$data);
     }
 
     /**
@@ -76,24 +74,31 @@ class UnitController extends Controller
     public function update(Request $request, $id)
     {
         $i = DB::table('units')
-            ->where('id', $id)
-            ->update(['name'=>$request->name]);
+            ->where('id',$id)
+            ->update(['name' => $request->name]);
         if($i)
         {
-            Session::flash('success', 'Data has been saved!');
-            return redirect()->route('unit.edit', $id);
+            Session::flash('success','Data has been editted!');
+            return redirect()->route('unit.edit',$id);
         }
-        else{
-            return redirect()->route('unit.edit', $id)
-                ->with('error', 'Fail to save data!');
+        else
+        {
+            return redirect()->route('unit.edit',$id)->with('error','Fail to editted data!');
         }
     }
 
     public function delete($id)
     {
-        DB::table('units')
-            ->where('id', $id)
+        $i = DB::table('units')
+            ->where('id',$id)
             ->update(['active'=>0]);
-        return redirect('unit')->with('success', 'Data has been removed!');
+        if($i)
+        {
+            return redirect('unit')->with('success','Data has been saved!');
+        }
+        else
+        {
+            return redirect('unit')->with('error','Fail to removed data!');
+        }
     }
 }

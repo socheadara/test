@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'row' => 22,
+    'row' => 10,
     /*
     |--------------------------------------------------------------------------
     | Application Environment

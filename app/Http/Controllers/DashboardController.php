@@ -10,8 +10,11 @@ class DashboardController extends Controller
     // {
     //     $this->middleware('auth');
     // }
+     // write in controller Route::group(['middleware'=>'auth'],function(){write route all in this block });
     public function index()
     {
+
         return view('dashboard');
+
     }
 }

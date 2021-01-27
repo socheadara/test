@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
     <strong>No Permission</strong>
 @endsection
@@ -12,7 +12,7 @@
         <div class="card-block">
             <p></p>
             <h3 class="text-danger">
-                You don't have permission here!
+                You do not has permission here!
             </h3>
         </div>
     </div>
@@ -20,12 +20,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_security").addClass('active open');
-            $("#security_collapse").addClass('collapse in');
-            $("#menu_user").addClass('active');
 
+            $('#menu_security').addClass('active open');
+            $('#security_collapse').addClass('collapse in');
+            $('#menu_role').addClass('active');
         });
     </script>
 @endsection

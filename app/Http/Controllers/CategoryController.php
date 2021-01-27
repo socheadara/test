@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     /**
@@ -15,10 +16,10 @@ class CategoryController extends Controller
     public function index()
     {
         $data['categories'] = DB::table('categories')
-            ->where('active', 1)
-            ->orderBy('id', 'desc')
-            ->paginate(config('app.row'));
-        return view('categories.index', $data);
+                ->where('active',1)
+                ->orderBy('id','desc')
+                ->paginate(config('app.row'));
+        return view('categories.index',$data);
     }
 
     /**
@@ -43,11 +44,14 @@ class CategoryController extends Controller
             ->insert($request->except('_token'));
         if($i)
         {
-            Session::flash('success', 'Data has been saved!');
+            $value = "Data has been saved!";
+            Session::flash('success', $value);
             return redirect('category/create');
         }
-        else{
-            Session::flash('error', 'Fail to save data!');
+        else
+        {
+            $value = "Fail to saved data!";
+            Session::flash('error', $value);
             return redirect('category/create')->withInput();
         }
     }
@@ -61,8 +65,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-       $cat = DB::table('categories')->find($id);
-       return view('categories.edit', compact('cat'));
+        $cat = DB::table('categories')->find($id);
+        return view('categories.edit',compact('cat'));
     }
 
     /**
@@ -74,26 +78,40 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $i = DB::table('categories')
-            ->where('id', $id)
+        $i = DB::table('categories')
+            ->where('id',$id)
             ->update(['name'=>$request->name]);
         if($i)
         {
-            
-            return redirect()->route('category.edit', $id)
-                ->with('success', 'Data has been saved!');
+            $value = "Data has been updated!";
+            // Session::flash('success',$value);
+            // return redirect("category/{$id}/edit");
+            // return redirect()->route('category.edit',$id);
+            return redirect()->route('category.edit',$id)->with('success',$value);
         }
-        else{
-            return redirect()->route('category.edit', $id)
-                ->with('error', 'Fail to save data!');
+        else
+        {
+            $value = "Fail to update data!";
+            Session::flash('error',$value);
+            // return redirect("category/{$id}/edit");
+            return redirect()->route('category.edit',$id);
         }
     }
     public function delete($id)
     {
-        $i = DB::table('categories')
-            ->where('id', $id)
+        $i  = DB::table('categories')
+            ->where('id',$id)
             ->update(['active'=>0]);
-        return redirect()->route('category.index')
-            ->with('success', 'Data has been removed!');
+        if($i)
+        {
+            // use name route
+            return redirect()->route('category.index')
+            ->with('success','Data has been removed!');
+        }
+        else
+        {
+            // use url
+            return redirect('category')->with('error','Fail to removed data!');
+        }
     }
 }

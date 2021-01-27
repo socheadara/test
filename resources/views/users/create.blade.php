@@ -1,12 +1,12 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
-    <strong>Create User</strong>
+    <strong>Create Users</strong>
 @endsection
 @section('content')
 <form action="{{url('user/save')}}" method="POST" enctype="multipart/form-data">
     <div class="card card-gray">
         <div class="toolbox">
-            <button class="btn btn-primary btn-sm btn-oval">
+            <button class="btn btn-sm btn-primary btn-oval">
                 <i class="fa fa-save"></i> Save
             </button>
             <a href="{{url('user')}}" class="btn btn-warning btn-sm btn-oval">
@@ -14,79 +14,76 @@
             </a>
         </div>
         <div class="card-block">
-            @if(Session::has('success'))
+            @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p>
                         {{session('success')}}
                     </p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
-            @if(Session::has('error'))
+            @if (Session::has('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <p>
                         {{session('error')}}
                     </p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                    <ul>
-                       @foreach($errors->all() as $error)
-                            <li>{{$error}}</li>
+                       @foreach ($errors->all() as $error)
+                           <li>{{$error}}</li>
                        @endforeach
                    </ul>
                 </div>
             @endif
             {{csrf_field()}}
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="form-group row">
-                        <label for="name" class="col-sm-3">Full Name <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="name" name='name' required autofocus 
-                                value="{{old('name')}}">
+                        <label for="name"  class="col-sm-3"> Full Name <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
+                            <input type="text"  class="form-control" id="name" name="name" required autofocus value="{{old('name')}}">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="email" class="col-sm-3">Email <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="email" class="form-control" id="email" name='email' required 
-                                value="{{old('email')}}">
+                        <label for="email" class="col-sm-3"> Email <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
+                            <input type="email"  class="form-control" id="email" name="email" required value="{{old('email')}}" >
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="username" class="col-sm-3">Username <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="username" name='username' required 
-                                value="{{old('username')}}">
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="username" name="username" required value="{{old('username')}}" >
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="password" class="col-sm-3">Password <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" id="password" name='password' required>
+                        <div class="col-sm-7">
+                            <input type="password"  class="form-control" id="password" name="password" required >
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="role" class="col-sm-3">Role <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                        <label for="role" class="col-sm-3 ">Role <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <select name="role" id="role" class="form-control chosen-select">
-                                <option value="">--Select--</option>
-                                @foreach($roles as $role)
+                                <option value="">-----Select-----</option>
+                                @foreach ($roles as $role)
                                     <option value="{{$role->id}}">{{$role->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="language" class="col-sm-3">Language <span class="text-danger">*</span></label>
-                        <div class="col-sm-8">
+                        <label for="language" class="col-sm-3 ">Language <span class="text-danger">*</span></label>
+                        <div class="col-sm-7">
                             <select name="language" id="language" class="form-control">
                                 <option value="en">English</option>
                                 <option value="km">ភាសាខ្មែរ</option>
@@ -94,20 +91,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <div class="form-group row">
-                        <label for="phto" class="col-sm-3">Photo</label>
+                        <label for="photo" class="col-sm-3">Photo</label>
                         <div class="col-sm-8">
-                            <input type="file" class="form-control" id="photo" name='photo' onchange="preview(event)" 
-                                accept="image/x-png,image/gif,image/jpeg">
-                            <p style="margin-top:9px">
-                                <img src="" alt="" width="120" id='img'>
+                            <input type="file" class="form-control" id="photo" name="photo"
+                                   onchange="preview(event)" accept="image/x-png,image/gif,image/jpeg" >
+                            <p style="margin-top: 9px">
+                                <img src="" alt="" width="120" id="img">
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </form>
@@ -115,12 +111,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_security").addClass('active open');
-            $("#security_collapse").addClass('collapse in');
-            $("#menu_user").addClass('active');
 
+            $('#menu_security').addClass('active open');
+            $('#security_collapse').addClass('collapse in');
+            $('#menu_user').addClass('active');
         });
         function preview(evt)
         {

@@ -3,15 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title> Stock Management </title>
+        <title> Stock Managerment </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
         <link rel="stylesheet" href="{{asset('css/vendor.css')}}">
         <link rel="stylesheet" href="{{asset('css/app.css')}}">
-        <link rel="stylesheet" href="{{asset('css/component-chosen.min.css')}}">
         <link rel="stylesheet" href="{{asset('css/custom.css')}}">
+        <link rel="stylesheet" href="{{asset('css/component-chosen.min.css')}}">
         @yield('css')
     </head>
     <body>
@@ -24,10 +24,11 @@
                         </button>
                     </div>
                     <div class="header-block header-block-search">
-                       @yield('header')
+                        @yield('header')
                     </div>
                     <div class="header-block header-block-buttons">
-                        
+
+
                     </div>
                     <div class="header-block header-block-nav">
                         <ul class="nav-profile">
@@ -46,13 +47,12 @@
                                                     <div class="img" style="background-image: url('assets/faces/3.jpg')"></div>
                                                 </div>
                                                 <div class="body-col">
-                                                    <p>
-                                                        Lorem ipsum dolor sit amet.
-                                                    </p>
+                                                    <p>Lorem ipsum dolor sit amet.</p>                                                        <span class="accent">Zack Alien</span> pushed new commit: <span class="accent">Fix page load performance issue</span>. </p>
                                                 </div>
                                             </a>
                                         </li>
-                                      
+
+
                                     </ul>
                                     <footer>
                                         <ul>
@@ -88,81 +88,59 @@
                     <div class="sidebar-container">
                         <div class="sidebar-header">
                             <div class="brand">
-                                <img src="{{asset('images/logo.png')}}" alt=""> Vdoo
+                                <div class="logo">
+                                    <span class="l l1"></span>
+                                    <span class="l l2"></span>
+                                    <span class="l l3"></span>
+                                    <span class="l l4"></span>
+                                    <span class="l l5"></span>
+                                </div> Stock Admin
                             </div>
                         </div>
                         <nav class="menu">
                             <ul class="sidebar-menu metismenu" id="sidebar-menu">
-                                <li>
+                                <li >
                                     <a href="index.html">
                                         <i class="fa fa-home"></i> Dashboard </a>
                                 </li>
-                                <li id="menu_in">
-                                    <a href="{{url('stock-in')}}">
-                                        <i class="fa fa-arrow-right"></i> Stock In
-                                    </a>
-                                </li>
-                                <li id="menu_out">
-                                    <a href="{{url('stockout')}}">
-                                        <i class="fa fa-arrow-right"></i> Stock Out
-                                    </a>
-                                </li>
-                                <li id="menu_scrap">
-                                    <a href="{{url('scrap')}}">
-                                        <i class="fa fa-arrow-right"></i> Scrap Product
-                                    </a>
-                                </li>
-                                <li id="menu_product">
-                                    <a href="{{route('product.index')}}">
-                                        <i class="fa fa-star"></i> Products
-                                    </a>
-                                </li>
-                                <li id='menu_report'>
+                                <li id="menu_stock">
                                     <a href="">
-                                        <i class="fa fa-file"></i> Reports <i class="fa arrow"></i>
+                                        <i class="fa fa-bank"></i> Stock Operation <i class="fa arrow"></i>
                                     </a>
-                                    <ul class="sidebar-nav" id="report_collapse">
-                                       
-                                        <li id="rp_balance">
-                                            <a href="{{url('report/balance')}}"> 
-                                                <i class="fa fa-arrow-right"></i> Stock Balance
-                                            </a>
+                                    <ul class="sidebar-nav" id="stock_collapse">
+                                        <li id="menu_in">
+                                            {{-- use url    --}}
+                                            <a href="{{url('stock-in')}}"> <i class="fa fa-arrow-right"></i> Stock In</a>
+                                            {{-- use route name <a href="{{route('stock-in.index')}}"> <i class="fa fa-arrow-right"></i> Categories</a> --}}
                                         </li>
-                                        <li id="rp_balance_warehouse">
-                                            <a href="{{url('report/balance/warehouse')}}"> 
-                                                <i class="fa fa-arrow-right"></i> Warehouse Balance 
-                                            </a>
-                                        </li>
-                                        <li id="rp_in">
-                                            <a href="{{url('report/in')}}"> 
-                                                <i class="fa fa-arrow-right"></i> Stock In 
-                                            </a>
-                                        </li>
-                                        <li id="rp_out">
-                                            <a href="{{url('report/out')}}"> 
-                                                <i class="fa fa-arrow-right"></i> Stock Out 
-                                            </a>
+                                        <li id="menu_out">
+                                            <a href="{{url('stock-out')}}"> <i class="fa fa-arrow-right"></i> Stock Out</a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li id='menu_setting'>
+                                <li id="menu_product">
+                                    <a href="{{url('product')}}">
+                                        <i class="fa fa-product-hunt"></i> Products </a>
+                                </li>
+                                <li id="menu_setting">
                                     <a href="">
                                         <i class="fa fa-cog"></i> Settings <i class="fa arrow"></i>
                                     </a>
                                     <ul class="sidebar-nav" id="setting_collapse">
-                                       
                                         <li id="menu_category">
-                                            <a href="{{route('category.index')}}"> <i class="fa fa-arrow-right"></i> Categories</a>
+                                            {{-- use url    --}}
+                                            <a href="{{url('category')}}"> <i class="fa fa-arrow-right"></i> Categories</a>
+                                            {{-- use route name <a href="{{route('category.index')}}"> <i class="fa fa-arrow-right"></i> Categories</a> --}}
                                         </li>
-                                        <li id="menu_warehouse">
-                                            <a href="{{route('warehouse.index')}}"> <i class="fa fa-arrow-right"></i> Warehouses</a>
+                                        <li id="menu_warhouse">
+                                            <a href="{{route('warehouse.index')}}"> <i class="fa fa-arrow-right"></i> Warhouse</a>
                                         </li>
                                         <li id="menu_unit">
                                             <a href="{{route('unit.index')}}"> <i class="fa fa-arrow-right"></i> Units</a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li id='menu_security'>
+                                <li id="menu_security">
                                     <a href="">
                                         <i class="fa fa-lock"></i> Security <i class="fa arrow"></i>
                                     </a>
@@ -172,17 +150,24 @@
                                                 <a href="{{url('user')}}"> <i class="fa fa-arrow-right"></i> Users</a>
                                             </li>
                                         @endcanview
-                                        <li id="menu_role">
-                                            <a href="{{url('role')}}"> <i class="fa fa-arrow-right"></i> Roles</a>
-                                        </li>
+                                            {{--  <li id="menu_role">
+                                                <a href="{{url('role')}}"> <i class="fa fa-arrow-right"></i> Roles</a>
+                                            </li>  --}}
+                                        @canview('role')
+                                            <li id="menu_role">
+                                                <a href="{{url('role')}}"> <i class="fa fa-arrow-right"></i> Roles</a>
+                                            </li>
+                                        @endcanview
                                     </ul>
                                 </li>
+
+
                             </ul>
                         </nav>
                     </div>
                     <footer class="sidebar-footer">
                         <ul class="sidebar-menu metismenu" id="customize-menu">
-                            
+
                         </ul>
                     </footer>
                 </aside>
@@ -193,7 +178,7 @@
                     <section class="section">
                         @yield('content')
                     </section>
-                   
+
                 </article>
                 <footer class="footer">
                     <div class="footer-block buttons">
@@ -201,14 +186,15 @@
                     </div>
                     <div class="footer-block author">
                         <ul>
-                          
+                            <li> created by <a href="https://github.com/socheadara">Sochea Dara</a>
+                            </li>
                             <li>
-                                <a href="#">hengvongkol@gmail.com</a>
+                                <a href="#">hearamelody168@gmail.com</a>
                             </li>
                         </ul>
                     </div>
                 </footer>
-               
+
             </div>
         </div>
         <!-- Reference block for JS -->
@@ -223,9 +209,7 @@
         <script src="{{asset('js/app.js')}}"></script>
         <script src="{{asset('js/chosen.jquery.min.js')}}"></script>
         <script>
-            $(document).ready(function(){
-                $('.chosen-select').chosen();
-            });
+            $('.chosen-select').chosen();
         </script>
         @yield('js')
     </body>

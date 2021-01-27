@@ -1,24 +1,34 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
     <strong>Users</strong>
 @endsection
 @section('content')
     <div class="card card-gray">
         <div class="toolbox">
-            @cancreate('user')
-                <a href="{{url('user/create')}}" class="btn btn-primary btn-sm btn-oval">
-                    <i class="fa fa-plus-circle"></i> {{trans('label.create')}}
-                </a>
-            @endcancreate
+            <div class="row">
+                <div class="col-sm-4">
+                    @cancreate('user')
+                        <a href="{{url('user/create')}}" class="btn btn-primary btn-sm btn-oval">
+                            <i class="fa fa-plus-circle"></i> {{trans('label.create')}}
+                        </a>
+                    @endcancreate
+                </div>
+                <div class="col-sm-7">
+                    <form class="search" action="{{url('user/search')}}" method="GET">
+                        <input type="text" placeholder="Search by name , username ,email" name="us"  value="{{$us}}">
+                        <button type="text"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="card-block">
-            @if(Session::has('success'))
+            @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p>
                         {{session('success')}}
                     </p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
@@ -32,7 +42,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Language</th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,30 +52,30 @@
                         {
                             $page = 1;
                         }
-                        $i = config('app.row') * ($page -1) + 1;
+                        $i = config('app.row') * ($page-1) + 1;
                     ?>
-                    @foreach($users as $u)
+                    @foreach ($users as $u)
                         <tr>
                             <td>{{$i++}}</td>
                             <td>
-                                <img src="{{asset($u->photo)}}" alt="" width="27">
+                                <img src="{{asset($u->photo)}}" alt="" width="45" height="45">
                             </td>
                             <td>{{$u->name}}</td>
                             <td>{{$u->username}}</td>
                             <td>{{$u->email}}</td>
-                            <td>{{$u->rname}}</td>
+                            <td><a href="{{url('role/detail/'.$u->id)}}">{{$u->rname}}</a></td>
                             <td>
-                                {{$u->language=='en'?'English':'ភាសខ្មែរ'}}
+                                {{$u->language=='en'?'English':'ភាសាខ្មែរ'}}
                             </td>
-                            <td class='action'>
+                            <td class="action">
                                 @candelete('user')
-                                <a href="{{url('user/delete/'.$u->id)}}" class="text-danger" title='Delete' 
-                                    onclick="return confirm('You want to delete?')">
+                                <a href="{{url('user/delete/'.$u->id)}}" class="text-danger" title="Delete" onclick="return confirm('Do you want to delete?') ">
                                     <i class="fa fa-trash"></i>
-                                </a>&nbsp;
+                                </a>
                                 @endcandelete
+                                &nbsp;
                                 @canedit('user')
-                                <a href="{{url('user/edit/'.$u->id)}}" class="text-success" title='Edit'>
+                                <a href="{{url('user/edit/'.$u->id)}}" class="text-success" title="edit">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 @endcanedit
@@ -81,12 +91,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_security").addClass('active open');
-            $("#security_collapse").addClass('collapse in');
-            $("#menu_user").addClass('active');
 
+            $('#menu_security').addClass('active open');
+            $('#security_collapse').addClass('collapse in');
+            $('#menu_user').addClass('active');
         });
     </script>
 @endsection

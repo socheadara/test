@@ -1,51 +1,97 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(function($request, $next){
-            app()->setLocale(Auth::user()->language);
+        $this->middleware(function($request,$next){
+            app()->setlocale(Auth::user()->language);
             return $next($request);
         });
     }
+    // write in controller Route::group(['middleware'=>'auth'],function(){write route all in this block });
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('login');
+    }
     public function index()
     {
-        if(!Permission::check('user', 'l'))
-        {
-            return view('roles.no');
-        }
+        $data['us'] = "";
+        if(!check('user','l'))
+            {
+                return view('roles.no');
+            }
         $data['users'] = DB::table('users')
-            ->join('roles', 'users.role_id', 'roles.id')
-            ->orderBy('users.id', 'desc')
-            ->select('users.*', 'roles.name as rname')
+            ->where('users.active',1)
+            ->join('roles','users.role_id','roles.id')
+            ->orderBy('users.id','desc')
+            ->select('users.*','roles.name as rname')
             ->paginate(config('app.row'));
-        return view('users.index', $data);
+        return view('users.index',$data);
+    }
+    public function search(Request $r)
+    {
+        $data['us'] = $r->us;
+        $us = $r->us;
+        $data['users'] = DB::table('users')
+            ->join('roles','users.role_id','roles.id')
+            ->where(function($query) use($us){
+                $query = $query->orWhere('users.name','like',"%{$us}%")
+                               ->orWhere('users.username','like',"%{$us}%")
+                               ->orWhere('users.email','like',"%{$us}%");
+            })
+            ->where('users.active',1)
+            ->orderBy('users.id','desc')
+            ->select('users.*','roles.name as rname')
+            ->paginate(config('app.row'));
+        return view('users.index',$data);
     }
     public function create()
     {
-        if(!Permission::check('user', 'i'))
+        if(!check('user','i'))
         {
             return view('roles.no');
         }
         $data['roles'] = DB::table('roles')
-            ->where('active', 1)
-            ->get();
-        return view('users.create', $data);
+                ->where('active',1)
+                ->get();
+        return view('users.create',$data);
     }
-    public function save(Request $r)
+    public function delete($id,Request $r)
     {
-        if(!Permission::check('user', 'i'))
+        if(!check('user','d'))
         {
             return view('roles.no');
         }
-        $validate = $r->validate([
-            'name' => 'required|min:3|max:200',
+        DB::table('users')
+            ->where('id',$id)
+            ->update(['active'=>0]);
+
+        return redirect('user')->with('success','Data has been removed!');
+    }
+    public function edit($id)
+    {
+        if(!check('user','u'))
+        {
+            return view('roles.no');
+        }
+        $data['roles'] = DB::table('roles')
+                ->where('active',1)
+                ->get();
+        $data['user'] = DB::table('users')
+            ->where('id',$id)
+            ->first();
+        return view('users.edit',$data);
+    }
+    public function save(Request $r)
+    {
+        $validatedData = $r->validate([
+            'name' => 'required|unique:users|min:3|max:255',
             'email' => 'required',
             'username' => 'required|min:3|unique:users',
             'password' => 'required|min:3'
@@ -60,41 +106,28 @@ class UserController extends Controller
         );
         if($r->photo)
         {
-            $data['photo'] = $r->file('photo')->store('uploads/users', 'custom');
+            $data['photo'] = $r->file('photo')->store('uploads/users','custom');
         }
         $i = DB::table('users')->insert($data);
         if($i)
         {
-            $r->session()->flash('success', 'Data has been saved!');
-            return redirect('user/create');
+
+            return redirect('user/create')->with('success','Data has been save!');
         }
-        else{
-            $r->session()->flash('error', 'Fail to save data!');
-            return redirect('user/create')->withInput();
-        }
-    }
-    public function edit($id)
-    {
-        if(!Permission::check('user', 'u'))
+        else
         {
-            return view('roles.no');
+
+            return redirect('user/create')->with('error','Fail to save data!')->withInput();
         }
-        $data['roles'] = DB::table('roles')
-            ->where('active', 1)
-            ->get();
-        $data['user'] = DB::table('users')
-            ->where('id', $id)
-            ->first();
-        return view('users.edit', $data);
     }
     public function update(Request $r)
     {
-        if(!Permission::check('user', 'u'))
+        if(!check('user','u'))
         {
             return view('roles.no');
         }
-        $validate = $r->validate([
-            'name' => 'required|min:3|max:200',
+        $validatedData = $r->validate([
+            'name' => 'required|min:3|max:255',
             'email' => 'required',
             'username' => 'required|min:3'
         ]);
@@ -104,44 +137,28 @@ class UserController extends Controller
             'username' => $r->username,
             'language' => $r->language,
             'role_id' => $r->role
+
         );
-        if($r->password!="")
+        if($r->password!='')
         {
             $data['password'] = bcrypt($r->password);
         }
         if($r->photo)
         {
-            $data['photo'] = $r->file('photo')->store('uploads/users', 'custom');
+            $data['photo'] = $r->file('photo')->store('uploads/users','custom');
         }
         $i = DB::table('users')
-            ->where('id', $r->id)
+            ->where('id',$r->id)
             ->update($data);
         if($i)
         {
-            $r->session()->flash('success', 'Data has been saved!');
-            return redirect('user/edit/'.$r->id);
-        }
-        else{
-            $r->session()->flash('error', 'Fail to save data!');
-            return redirect('user/edit/'.$r->id);
-        }
-    }
-    public function delete($id, Request $r)
-    {
-        if(!Permission::check('user', 'd'))
-        {
-            return view('roles.no');
-        }
-        DB::table('users')
-            ->where('id', $id)
-            ->delete();
-        $r->session()->flash('success', 'Data has been removed!');
-        return redirect('user');
-    }
-    public function logout()
-    {
-        Auth::logout();
-        return redirect('login');
-    }
 
+            return redirect('user/edit/'.$r->id)->with('success','Data has been save!');
+        }
+        else
+        {
+
+            return redirect('user/edit/'.$r->id)->with('error','Fail to save data!');
+        }
+    }
 }

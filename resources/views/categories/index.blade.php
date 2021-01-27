@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
     <strong>Categories</strong>
 @endsection
@@ -10,13 +10,13 @@
             </a>
         </div>
         <div class="card-block">
-            @if(Session::has('success'))
+            @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p>
                         {{session('success')}}
                     </p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
@@ -25,8 +25,8 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                       
-                        <th></th>
+
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,21 +36,22 @@
                         {
                             $page = 1;
                         }
-                        $i = config('app.row') * ($page -1) + 1;
+                        $i = config('app.row') * ($page-1) + 1;
                     ?>
-                    @foreach($categories as $cat)
+                    @foreach ($categories as $cat)
                         <tr>
                             <td>{{$i++}}</td>
                             <td>{{$cat->name}}</td>
-                            <td class='action'>
-                                <a href="{{url('category/delete/'.$cat->id)}}" class="text-danger" 
-                                    onclick="return confirm('You want to delete?')">
+                            <td class="action">
+                                 <a href="{{url('category/delete/'.$cat->id)}}" class="text-danger"  title="Delete" onclick="return confirm('Do you want to delete?') ">
                                     <i class="fa fa-trash"></i>
-                                </a>&nbsp;
-                                <a href="{{route('category.edit', $cat->id)}}" class="text-success" title="Edit">
+                                </a> &nbsp;
+                                <a href="{{route('category.edit' , $cat->id)}}" class="text-success" title="edit">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                               
+                                {{--  <a href="{{url('category/'.$cat->id.'/edit')}}" class="text-success" title="edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>  --}}
                             </td>
                         </tr>
                     @endforeach
@@ -63,12 +64,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_setting").addClass('active open');
-            $("#setting_collapse").addClass('collapse in');
-            $("#menu_category").addClass('active');
 
+            $('#menu_setting').addClass('active open');
+            $('#setting_collapse').addClass('collapse in');
+            $('#menu_category').addClass('active');
         });
     </script>
 @endsection

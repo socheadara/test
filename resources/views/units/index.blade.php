@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
     <strong>Units</strong>
 @endsection
@@ -10,13 +10,13 @@
             </a>
         </div>
         <div class="card-block">
-            @if(Session::has('success'))
+            @if (Session::has('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p>
                         {{session('success')}}
                     </p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             @endif
@@ -25,8 +25,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                       
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,22 +35,20 @@
                         {
                             $page = 1;
                         }
-                        $i = config('app.row') * ($page -1) + 1;
+                        $i = config('app.row') * ($page-1) + 1;
                     ?>
-                    @foreach($units as $unit)
+                    @foreach ($units as $un)
                         <tr>
                             <td>{{$i++}}</td>
-                            <td>{{$unit->name}}</td>
-                            <td class='action'>
-                                <a href="{{url('unit/delete/'.$unit->id)}}" class="text-danger" 
-                                    onclick="return confirm('You want to delete?')">
+                            <td>{{$un->name}}</td>
+                            <td class="action">
+                                <a href="{{url('unit/delete/'.$un->id)}}" class="text-danger" title="Delete" onclick="return confirm('Do you want to delete?') ">
                                     <i class="fa fa-trash"></i>
                                 </a>&nbsp;
-                                <a href="{{route('unit.edit', $unit->id)}}" class="text-success" title="Edit">
+                                <a href="{{route('unit.edit',$un->id)}}" class="text-success" title="edit">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                               
-                            </td>
+                            </>
                         </tr>
                     @endforeach
                 </tbody>
@@ -63,12 +60,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_setting").addClass('active open');
-            $("#setting_collapse").addClass('collapse in');
-            $("#menu_unit").addClass('active');
 
+            $('#menu_setting').addClass('active open');
+            $('#setting_collapse').addClass('collapse in');
+            $('#menu_unit').addClass('active');
         });
     </script>
 @endsection

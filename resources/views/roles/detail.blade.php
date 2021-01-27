@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('Layouts.master')
 @section('header')
     <strong>Roles</strong>
 @endsection
@@ -6,7 +6,7 @@
     {{csrf_field()}}
     <div class="card card-gray">
         <div class="toolbox">
-            <a href="{{url('role')}}" class="btn btn-warning btn-sm btn-oval">
+            <a href="{{url('role ')}}" class="btn btn-warning btn-sm btn-oval">
                 <i class="fa fa-reply"></i> Back
             </a>
         </div>
@@ -28,29 +28,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                  @php($i=1)
-                    @foreach($permissions as $p)
-                        <tr rid="{{$role->id}}" rpid="{{$p->id?$p->id:'0'}}" pid="{{$p->pid}}">
-                            <td>{{$i++}}</td>
-                            <td>{{$p->alias}}</td>
-                            <td>
-                                <input type="checkbox" value="{{$p->list?'1':'0'}}" {{$p->list?'checked':''}} 
-                                    onchange="save(this)">
-                            </td>
-                            <td>
-                                <input type="checkbox" value="{{$p->create?'1':'0'}}" {{$p->create?'checked':''}} 
-                                onchange="save(this)">
-                            </td>
-                            <td>
-                                <input type="checkbox" value="{{$p->edit?'1':'0'}}" {{$p->edit?'checked':''}} 
-                                onchange="save(this)">
-                            </td>
-                            <td>
-                                <input type="checkbox" value="{{$p->delete?'1':'0'}}" {{$p->delete?'checked':''}} 
-                                onchange="save(this)">
-                            </td>
-                        </tr>
-                    @endforeach
+                    @php($i=1)
+                        @foreach ($permissions as $p)
+                            <tr rid="{{$role->id}}" rpid="{{$p->id?$p->id:'0'}}" pid="{{$p->pid}}">
+                                <td>{{$i++}}</td>
+                                <td>{{$p->alias}}</td>
+                                <td>
+                                    <input type="checkbox" value="{{$p->list?'1':'0'}}" {{$p->list?'checked':''}}
+                                                onchange="save(this)">
+                                </td>
+                                <td>
+                                    <input type="checkbox" value="{{$p->create?'1':'0'}}" {{$p->create?'checked':''}}
+                                                onchange="save(this)">
+                                </td>
+                                <td>
+                                    <input type="checkbox" value="{{$p->edit?'1':'0'}}" {{$p->edit?'checked':''}}
+                                                onchange="save(this)">
+                                </td>
+                                <td>
+                                    <input type="checkbox" value="{{$p->delete?'1':'0'}}" {{$p->delete?'checked':''}}
+                                                onchange="save(this)">
+                                </td>
+                            </tr>
+                        @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -58,27 +59,29 @@
 @endsection
 @section('js')
     <script>
-        var burl = "{{url('/')}}";
+        var best_url = "{{url('/')}}";
         $(document).ready(function(){
-            $("#sidebar-menu").removeClass('active open');
+            $('#sidebar-menu').removeClass('active open');
             $('#sidebar-menu li ul li').removeClass('active');
-            $("#menu_security").addClass('active open');
-            $("#security_collapse").addClass('collapse in');
-            $("#menu_role").addClass('active');
 
+            $('#menu_security').addClass('active open');
+            $('#security_collapse').addClass('collapse in');
+            $('#menu_role').addClass('active');
         });
         function save(obj)
         {
-            let token = $("input[name='_token']").val();
-           
+            let token = $("input[name = '_token']").val();
             let val = $(obj).val();
-            if(val==1)
+            if(val == 1)
             {
                 $(obj).val(0);
+                {{--  val(value)  --}}
             }
-            else{
+            else
+            {
                 $(obj).val(1);
             }
+
             let tr = $(obj).parent().parent();
             let rid = $(tr).attr('rid');
             let rpid = $(tr).attr('rpid');
@@ -88,27 +91,29 @@
             let create = $(tds[3]).children('input').val();
             let edit = $(tds[4]).children('input').val();
             let del = $(tds[5]).children('input').val();
+            {{--  bring data to database  --}}
             let data = {
-                pid: pid,
-                role_id: rid,
-                rpid: rpid,
-                list: list,
-                create: create,
-                edit: edit,
-                del: del
+                pid : pid,
+                role_id : rid,
+                rpid : rpid,
+                list : list,
+                create : create,
+                edit : edit,
+                del : del
             };
+            {{-- use ajax in jquery --}}
             $.ajax({
                 type: 'POST',
-                url: burl + "/role/permission/save",
+                url: best_url + "/role/permission/save",
                 data: data,
                 beforeSend: function(request){
-                    return request.setRequestHeader('X-CSRF-Token', token);
+                    return request.setRequestHeader('X-CSRF-Token',token);
                 },
-                success: function(sms)
-                {
-                    $(tr).attr('rpid', sms);
+                success: function(sms){
+                    $(tr).attr('rpid',sms);
                 }
             });
         }
     </script>
+
 @endsection

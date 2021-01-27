@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
 use App\Warehouse;
 use Session;
+use Illuminate\Support\Facades\DB;
 class WarehouseController extends Controller
 {
     /**
@@ -15,8 +15,8 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $warehouses = Warehouse::where('active', 1)
-            ->paginate(config('app.row'));
+        $warehouses = Warehouse::where('active',1)
+                ->paginate(config('app.row'));
         return view('warehouses.index', compact('warehouses'));
     }
 
@@ -46,17 +46,14 @@ class WarehouseController extends Controller
         $i = Warehouse::insert($request->except('_token'));
         if($i)
         {
-            return redirect()->route('warehouse.create')
-                ->with('success', 'Data has been saved!');
+            return redirect()->route('warehouse.create')->with('success','Data has been save!');
         }
-        else{
-            Session::flash('error', 'Fail to save data!');
-            return redirect('warehouse/create')
-                ->withInput();
+        else
+        {
+            Session::flash('error','Fail to save data!');
+            return redirect('warehouse/create')->withInput();
         }
     }
-
-   
 
     /**
      * Show the form for editing the specified resource.
@@ -67,7 +64,7 @@ class WarehouseController extends Controller
     public function edit($id)
     {
         $data['wh'] = Warehouse::find($id);
-        return view('warehouses.edit', $data);
+        return view('warehouses.edit',$data);
     }
 
     /**
@@ -79,33 +76,35 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, $id)
     {
-    //    $wh = Warehouse::find($id);
-    //    $wh->code = $request->code;
-    //    $wh->name = $request->name;
-    //    $wh->address = $request->address;
-    //    $i = $wh->save();
-        $i = Warehouse::where('id', $id)
-            ->update($request->except('_token', '_method'));
+        // $wh = Warehouse::find($id);
+        // $wh->code = $request->code;
+        // $wh->name = $request->name;
+        // $wh->address = $request->address;
+        // $i = $wh->save();
+        $i = Warehouse::where('id',$id)
+            ->update($request->except('_token','_method'));
         if($i)
         {
-            return redirect()->route('warehouse.edit', $id)
-                ->with('success', 'Data has been saved!');
+            $value = "Data has been update!";
+            return redirect()->route('warehouse.edit',$id)->with('success',$value);
         }
-        else{
-            return redirect()->route('warehouse.edit', $id)
-                ->with('error', 'Fail to save data!');
+        else
+        {
+            return redirect()->route('warehouse.edit',$id)->with('error','Fail to update data!');
         }
     }
     public function delete($id)
     {
-        $i = Warehouse::where('id', $id)
+        $i = Warehouse::where('id',$id)
             ->update(['active'=>0]);
         if($i)
         {
-            return redirect('warehouse')->with('success', 'Data has been removed!');
+            return redirect('warehouse')->with('success','Data has been removed!');
         }
-        else{
-            return redirect('warehouse')->with('error', 'Fail to remove data!');
+        else
+        {
+            return redirect('warehouse')->with('error','Fail to removed data!');
         }
     }
+
 }
